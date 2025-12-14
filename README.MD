@@ -36,10 +36,16 @@ const char *second = arena_getS(&arena, 1); // "World"
 
 arena_free(&arena); // Free memory
 ```
+## Thread Safety
+
+This Areana is **not thread-safe by design**.
+
+Synchronization is intentionally left to the caller, allowing the arena to be
+used in single-threaded, externally synchronized, or thread-local contexts
+without imposing any specific concurrency model.
 
 ## Note
 
- - Not thread-safe
  - Returned string pointers may be invalidated after reallocation
  - `arena_reset()` does not free memory — it resets logical state
 
