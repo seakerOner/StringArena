@@ -2,9 +2,12 @@
 
 A minimal string arena allocator implemented in C.
 
-This project demonstrates how to efficiently store multiple strings in a
-single contiguous memory buffer while keeping fast indexed access without
-individual heap allocations per string.
+`StringArena` stores multiple null-terminated strings in a single contiguous
+memory buffer, allowing fast indexed access without individual heap allocations
+per string.
+
+This library is designed for simplicity, cache locality, and predictable
+memory behavior.
 
 ## Features
 
@@ -12,12 +15,16 @@ individual heap allocations per string.
 - Retrieve individual strings by index.
 - Automatic resizing as new strings are added.
 - Memory cleanup when the arena is no longer needed.
+- Returned string pointers remain valid until:
+    - the arena reallocates
+    - `arena_reset()` is called
+    - `arena_free()` is called
 
 ## API
 
 ```c
-StringArena arena_create();
-void arena_addS(StringArena *arena, char *val);
+StringArena arena_create(void);
+void arena_addS(StringArena *arena, const char *val);
 const char *arena_getS(StringArena *arena, size_t index);
 void arena_reset(StringArena *arena);
 void arena_free(StringArena *arena);
@@ -38,7 +45,7 @@ arena_free(&arena); // Free memory
 ```
 ## Thread Safety
 
-This Areana is **not thread-safe by design**.
+This Arena is **not thread-safe by design**.
 
 Synchronization is intentionally left to the caller, allowing the arena to be
 used in single-threaded, externally synchronized, or thread-local contexts
@@ -52,6 +59,5 @@ without imposing any specific concurrency model.
 ## Compilation
 
 ```bash
-make
-./build/test
+make run
 ```
