@@ -1,14 +1,27 @@
 # String Arena
 
-- A small C project for managing a string arena, allowing you to store 
-multiple strings in a single contiguous memory block and access them efficiently.
+A minimal string arena allocator implemented in C.
+
+This project demonstrates how to efficiently store multiple strings in a
+single contiguous memory buffer while keeping fast indexed access without
+individual heap allocations per string.
 
 ## Features
 
-- Dynamic storage of strings in contiguous memory.
+- Dynamic storage of null-terminated strings in contiguous memory.
 - Retrieve individual strings by index.
 - Automatic resizing as new strings are added.
 - Memory cleanup when the arena is no longer needed.
+
+## API
+
+```c
+StringArena arena_create();
+void arena_addS(StringArena *arena, char *val);
+const char *arena_getS(StringArena *arena, size_t index);
+void arena_reset(StringArena *arena);
+void arena_free(StringArena *arena);
+```
 
 ## Example
 
@@ -23,6 +36,12 @@ const char *second = arena_getS(&arena, 1); // "World"
 
 arena_free(&arena); // Free memory
 ```
+
+## Note
+
+ - Not thread-safe
+ - Returned string pointers may be invalidated after reallocation
+ - `arena_reset()` does not free memory — it resets logical state
 
 ## Compilation
 
